@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Index from "./pages/Index";
 import Mitarbeiter from "./pages/Mitarbeiter";
+import MitarbeiterDetail from "./pages/MitarbeiterDetail";
 import Fahrzeuge from "./pages/Fahrzeuge";
 import Umsaetze from "./pages/Umsaetze";
 import NotFound from "./pages/NotFound";
@@ -23,6 +24,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/mitarbeiter" element={<Mitarbeiter />} />
+            <Route path="/mitarbeiter/:id" element={<MitarbeiterDetail />} />
             <Route path="/fahrzeuge" element={<Fahrzeuge />} />
             <Route path="/umsaetze" element={<Umsaetze />} />
             <Route path="/abrechnung" element={<div className="p-6"><h1 className="text-2xl font-bold">Abrechnung - Coming Soon</h1></div>} />

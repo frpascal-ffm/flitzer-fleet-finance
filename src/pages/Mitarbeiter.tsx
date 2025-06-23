@@ -1,13 +1,18 @@
 
 import React from 'react';
-import { Users, FilePlus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Users } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import AddMitarbeiterDialog from '@/components/AddMitarbeiterDialog';
 
 const Mitarbeiter = () => {
+  const navigate = useNavigate();
+
   const mitarbeiterData = [
     {
+      id: 1,
       name: 'Petros Tsaturian',
       status: 'aktiv',
       provision: '40%',
@@ -15,6 +20,7 @@ const Mitarbeiter = () => {
       sollfahrten: 130
     },
     {
+      id: 2,
       name: 'Faig Mammmadzada',
       status: 'aktiv',
       provision: '42%',
@@ -22,6 +28,7 @@ const Mitarbeiter = () => {
       sollfahrten: 130
     },
     {
+      id: 3,
       name: 'Pascal Richter',
       status: 'aktiv',
       provision: '40%',
@@ -29,6 +36,7 @@ const Mitarbeiter = () => {
       sollfahrten: 0
     },
     {
+      id: 4,
       name: 'Ruslan Gasimov',
       status: 'aktiv',
       provision: '42%',
@@ -37,16 +45,17 @@ const Mitarbeiter = () => {
     }
   ];
 
+  const handleRowClick = (mitarbeiterId: number) => {
+    navigate(`/mitarbeiter/${mitarbeiterId}`);
+  };
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Mitarbeiter</h1>
         </div>
-        <Button className="bg-primary hover:bg-primary/90">
-          <FilePlus className="w-4 h-4 mr-2" />
-          Mitarbeiter hinzufügen
-        </Button>
+        <AddMitarbeiterDialog />
       </div>
 
       {/* Statistics Cards */}
@@ -107,8 +116,12 @@ const Mitarbeiter = () => {
                 </tr>
               </thead>
               <tbody>
-                {mitarbeiterData.map((mitarbeiter, index) => (
-                  <tr key={index} className="border-b hover:bg-gray-50">
+                {mitarbeiterData.map((mitarbeiter) => (
+                  <tr 
+                    key={mitarbeiter.id} 
+                    className="border-b hover:bg-gray-50 cursor-pointer"
+                    onClick={() => handleRowClick(mitarbeiter.id)}
+                  >
                     <td className="py-3 px-4">
                       <div className="w-3 h-3 bg-success rounded-full"></div>
                     </td>
@@ -117,7 +130,7 @@ const Mitarbeiter = () => {
                     <td className="py-3 px-4">{mitarbeiter.provision}</td>
                     <td className="py-3 px-4">{mitarbeiter.nettoGehalt}</td>
                     <td className="py-3 px-4">{mitarbeiter.sollfahrten}</td>
-                    <td className="py-3 px-4">
+                    <td className="py-3 px-4" onClick={(e) => e.stopPropagation()}>
                       <div className="flex space-x-2">
                         <Button variant="outline" size="sm">Bearbeiten</Button>
                         <Button variant="destructive" size="sm">Löschen</Button>

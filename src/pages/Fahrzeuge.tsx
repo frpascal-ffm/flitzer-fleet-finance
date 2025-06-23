@@ -1,9 +1,9 @@
-
 import React from 'react';
 import { FilePlus } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import AddFahrzeugDialog from '@/components/AddFahrzeugDialog';
 
 const Fahrzeuge = () => {
   const fahrzeugData = [
@@ -45,10 +45,7 @@ const Fahrzeuge = () => {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Fahrzeuge</h1>
         </div>
-        <Button className="bg-primary hover:bg-primary/90">
-          <FilePlus className="w-4 h-4 mr-2" />
-          Fahrzeug hinzufügen
-        </Button>
+        <AddFahrzeugDialog />
       </div>
 
       {/* Statistics Cards */}

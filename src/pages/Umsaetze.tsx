@@ -1,9 +1,9 @@
-
 import React from 'react';
-import { FilePlus, ArrowUp } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import AddUmsatzDialog from '@/components/AddUmsatzDialog';
 
 const Umsaetze = () => {
   const umsatzData = [
@@ -48,10 +48,7 @@ const Umsaetze = () => {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Umsätze</h1>
         </div>
-        <Button className="bg-primary hover:bg-primary/90">
-          <FilePlus className="w-4 h-4 mr-2" />
-          Umsatz hinzufügen
-        </Button>
+        <AddUmsatzDialog />
       </div>
 
       {/* Filter Section */}
