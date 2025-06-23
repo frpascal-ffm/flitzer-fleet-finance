@@ -1,9 +1,14 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout";
 import Index from "./pages/Index";
+import Mitarbeiter from "./pages/Mitarbeiter";
+import Fahrzeuge from "./pages/Fahrzeuge";
+import Umsaetze from "./pages/Umsaetze";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -14,11 +19,17 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/mitarbeiter" element={<Mitarbeiter />} />
+            <Route path="/fahrzeuge" element={<Fahrzeuge />} />
+            <Route path="/umsaetze" element={<Umsaetze />} />
+            <Route path="/abrechnung" element={<div className="p-6"><h1 className="text-2xl font-bold">Abrechnung - Coming Soon</h1></div>} />
+            <Route path="/kosten" element={<div className="p-6"><h1 className="text-2xl font-bold">Allgemeine Kosten - Coming Soon</h1></div>} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Layout>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
