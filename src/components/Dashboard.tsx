@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { Users, FilePlus, ArrowUp } from 'lucide-react';
@@ -64,7 +63,7 @@ const Dashboard = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-gray-600">Monatliche Kosten</CardTitle>
-            <FileMinus className="h-4 w-4 text-gray-400" />
+            <ArrowUp className="h-4 w-4 text-gray-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">2620.55 €</div>
