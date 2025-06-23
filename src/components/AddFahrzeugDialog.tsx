@@ -1,66 +1,112 @@
-
 import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { FilePlus } from 'lucide-react';
+import { useForm } from 'react-hook-form';
 
-const AddFahrzeugDialog = () => {
+interface FahrzeugDialogProps {
+  mode?: 'add' | 'edit';
+  defaultValues?: {
+    kennzeichen?: string;
+    fahrzeug?: string;
+    mitarbeiter?: string;
+    fixkosten?: string;
+    ruecklagen?: string;
+  };
+  onSubmit?: (data: any) => void;
+  trigger?: React.ReactNode;
+}
+
+const AddFahrzeugDialog: React.FC<FahrzeugDialogProps> = ({ 
+  mode = 'add', 
+  defaultValues = {}, 
+  onSubmit,
+  trigger 
+}) => {
+  const { register, handleSubmit, reset } = useForm({
+    defaultValues: {
+      kennzeichen: defaultValues.kennzeichen || '',
+      fahrzeug: defaultValues.fahrzeug || '',
+      mitarbeiter: defaultValues.mitarbeiter || '',
+      fixkosten: defaultValues.fixkosten || '',
+      ruecklagen: defaultValues.ruecklagen || ''
+    }
+  });
+
+  const onSubmitForm = (data: any) => {
+    if (onSubmit) {
+      onSubmit(data);
+    }
+    reset();
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-primary hover:bg-primary/90">
-          <FilePlus className="w-4 h-4 mr-2" />
-          Fahrzeug hinzufügen
-        </Button>
+        {trigger || (
+          <Button>
+            <Plus className="mr-2 h-4 w-4" />
+            Fahrzeug hinzufügen
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Neues Fahrzeug hinzufügen</DialogTitle>
+          <DialogTitle>
+            {mode === 'add' ? 'Fahrzeug hinzufügen' : 'Fahrzeug bearbeiten'}
+          </DialogTitle>
+          <DialogDescription>
+            {mode === 'add' 
+              ? 'Fügen Sie hier ein neues Fahrzeug hinzu.' 
+              : 'Bearbeiten Sie die Fahrzeugdaten.'}
+          </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="kennzeichen" className="text-right">
-              Kennzeichen
-            </Label>
-            <Input id="kennzeichen" className="col-span-3" />
+        <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="kennzeichen">Kennzeichen</Label>
+            <Input id="kennzeichen" {...register('kennzeichen')} />
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="fahrzeug" className="text-right">
-              Fahrzeug
-            </Label>
-            <Input id="fahrzeug" className="col-span-3" />
+          <div className="space-y-2">
+            <Label htmlFor="fahrzeug">Fahrzeug</Label>
+            <Input id="fahrzeug" {...register('fahrzeug')} />
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="baujahr" className="text-right">
-              Baujahr
-            </Label>
-            <Input id="baujahr" type="number" className="col-span-3" />
+          <div className="space-y-2">
+            <Label htmlFor="mitarbeiter">Mitarbeiter</Label>
+            <Input id="mitarbeiter" {...register('mitarbeiter')} />
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="angemeldet" className="text-right">
-              Angemeldet
-            </Label>
-            <Input id="angemeldet" type="date" className="col-span-3" />
+          <div className="space-y-2">
+            <Label htmlFor="fixkosten">Fixkosten</Label>
+            <Input 
+              id="fixkosten" 
+              {...register('fixkosten')} 
+              type="number" 
+              step="0.01"
+            />
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="fixkosten" className="text-right">
-              Fixkosten (€)
-            </Label>
-            <Input id="fixkosten" type="number" className="col-span-3" />
+          <div className="space-y-2">
+            <Label htmlFor="ruecklagen">Rücklagen</Label>
+            <Input 
+              id="ruecklagen" 
+              {...register('ruecklagen')} 
+              type="number" 
+              step="0.01"
+            />
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="ruecklagen" className="text-right">
-              Rücklagen (€)
-            </Label>
-            <Input id="ruecklagen" type="number" className="col-span-3" />
+          <div className="flex justify-end space-x-2">
+            <Button type="submit">
+              {mode === 'add' ? 'Hinzufügen' : 'Speichern'}
+            </Button>
           </div>
-        </div>
-        <div className="flex justify-end space-x-2">
-          <Button variant="outline">Abbrechen</Button>
-          <Button>Speichern</Button>
-        </div>
+        </form>
       </DialogContent>
     </Dialog>
   );

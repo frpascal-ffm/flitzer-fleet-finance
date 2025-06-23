@@ -1,5 +1,5 @@
-import React from 'react';
-import { FilePlus } from 'lucide-react';
+import React, { useState } from 'react';
+import { FilePlus, Pencil, Trash2, ExternalLink } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,6 +8,7 @@ import AddFahrzeugDialog from '@/components/AddFahrzeugDialog';
 
 const Fahrzeuge = () => {
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState('');
 
   const fahrzeugData = [
     {
@@ -45,8 +46,31 @@ const Fahrzeuge = () => {
     }
   ];
 
+  const filteredFahrzeugData = fahrzeugData.filter(fahrzeug => 
+    fahrzeug.kennzeichen.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    fahrzeug.fahrzeug.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    fahrzeug.mitarbeiter.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalFixkosten = filteredFahrzeugData.reduce((sum, fahrzeug) => {
+    const kosten = parseFloat(fahrzeug.fixkosten.replace('€', '').trim());
+    return sum + kosten;
+  }, 0);
+
+  const totalRuecklagen = filteredFahrzeugData.reduce((sum, fahrzeug) => {
+    const ruecklagen = parseFloat(fahrzeug.ruecklagen.replace('€', '').trim());
+    return sum + ruecklagen;
+  }, 0);
+
+  const totalGesamt = totalFixkosten + totalRuecklagen;
+
   const handleRowClick = (fahrzeugId: number) => {
     navigate(`/fahrzeuge/${fahrzeugId}`);
+  };
+
+  const handleEditFahrzeug = (data: any) => {
+    console.log('Updating vehicle:', data);
+    // Here you would typically make an API call to update the vehicle
   };
 
   return (
@@ -66,7 +90,7 @@ const Fahrzeuge = () => {
             <FilePlus className="h-4 w-4 text-gray-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">2278.55 €</div>
+            <div className="text-2xl font-bold">{totalFixkosten.toFixed(2)} €</div>
           </CardContent>
         </Card>
 
@@ -76,7 +100,7 @@ const Fahrzeuge = () => {
             <FilePlus className="h-4 w-4 text-gray-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">342.00 €</div>
+            <div className="text-2xl font-bold">{totalRuecklagen.toFixed(2)} €</div>
           </CardContent>
         </Card>
 
@@ -86,7 +110,7 @@ const Fahrzeuge = () => {
             <FilePlus className="h-4 w-4 text-gray-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">2620.55 €</div>
+            <div className="text-2xl font-bold">{totalGesamt.toFixed(2)} €</div>
           </CardContent>
         </Card>
       </div>
@@ -96,64 +120,79 @@ const Fahrzeuge = () => {
         <Input 
           placeholder="Suche nach Kennzeichen, Marke oder Modell..." 
           className="max-w-md"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
 
       {/* Fahrzeuge Table */}
-      <Card>
-        <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50 border-b">
-                <tr>
-                  <th className="text-left py-3 px-4 font-medium text-gray-600">Status</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-600">Kennzeichen</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-600">Fahrzeug</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-600">Baujahr</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-600">Angemeldet</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-600">Mitarbeiter</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-600">Fixkosten</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-600">Rücklagen</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-600">Gesamt</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-600">Aktionen</th>
+      <div className="rounded-md border">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b transition-colors">
+                <th className="h-8 px-2 text-left align-middle text-sm font-medium">Status</th>
+                <th className="h-8 px-2 text-left align-middle text-sm font-medium">Kennzeichen</th>
+                <th className="h-8 px-2 text-left align-middle text-sm font-medium">Fahrzeug</th>
+                <th className="h-8 px-2 text-left align-middle text-sm font-medium">Mitarbeiter</th>
+                <th className="h-8 px-2 text-left align-middle text-sm font-medium">Fixkosten</th>
+                <th className="h-8 px-2 text-left align-middle text-sm font-medium">Gesamt</th>
+                <th className="h-8 px-2 text-left align-middle text-sm font-medium">Aktionen</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredFahrzeugData.map((fahrzeug) => (
+                <tr 
+                  key={fahrzeug.id} 
+                  className="border-b transition-colors hover:bg-muted/50 cursor-pointer text-sm"
+                  onClick={() => handleRowClick(fahrzeug.id)}
+                >
+                  <td className="py-2 px-2">
+                    <div className="flex h-2 w-2 rounded-full bg-green-500"></div>
+                  </td>
+                  <td className="py-2 px-2 font-medium">{fahrzeug.kennzeichen}</td>
+                  <td className="py-2 px-2">{fahrzeug.fahrzeug}</td>
+                  <td className="py-2 px-2">{fahrzeug.mitarbeiter}</td>
+                  <td className="py-2 px-2">{fahrzeug.fixkosten}</td>
+                  <td className="py-2 px-2 font-medium">{fahrzeug.gesamt}</td>
+                  <td className="py-2 px-2">
+                    <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                      <AddFahrzeugDialog
+                        mode="edit"
+                        defaultValues={{
+                          kennzeichen: fahrzeug.kennzeichen,
+                          fahrzeug: fahrzeug.fahrzeug,
+                          mitarbeiter: fahrzeug.mitarbeiter,
+                          fixkosten: fahrzeug.fixkosten.replace(' €', ''),
+                          ruecklagen: fahrzeug.ruecklagen.replace(' €', '')
+                        }}
+                        onSubmit={handleEditFahrzeug}
+                        trigger={
+                          <Button variant="ghost" size="icon" className="h-6 w-6">
+                            <Pencil className="h-3 w-3" />
+                          </Button>
+                        }
+                      />
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-6 w-6 text-destructive"
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {fahrzeugData.map((fahrzeug) => (
-                  <tr 
-                    key={fahrzeug.id} 
-                    className="border-b hover:bg-gray-50 cursor-pointer"
-                    onClick={() => handleRowClick(fahrzeug.id)}
-                  >
-                    <td className="py-3 px-4">
-                      <div className="w-3 h-3 bg-success rounded-full"></div>
-                    </td>
-                    <td className="py-3 px-4 font-medium">{fahrzeug.kennzeichen}</td>
-                    <td className="py-3 px-4">{fahrzeug.fahrzeug}</td>
-                    <td className="py-3 px-4">{fahrzeug.baujahr}</td>
-                    <td className="py-3 px-4">{fahrzeug.angemeldet}</td>
-                    <td className="py-3 px-4">{fahrzeug.mitarbeiter}</td>
-                    <td className="py-3 px-4">{fahrzeug.fixkosten}</td>
-                    <td className="py-3 px-4">{fahrzeug.ruecklagen}</td>
-                    <td className="py-3 px-4 font-medium">{fahrzeug.gesamt}</td>
-                    <td className="py-3 px-4">
-                      <div className="flex space-x-2" onClick={(e) => e.stopPropagation()}>
-                        <Button variant="outline" size="sm">Bearbeiten</Button>
-                        <Button variant="destructive" size="sm">Löschen</Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="px-4 py-3 bg-gray-50 border-t">
-            <p className="text-sm text-gray-600">
-              Summe (nur aktive Fahrzeuge): <span className="font-medium">2278.55 €</span> | <span className="font-medium">342.00 €</span> | <span className="font-medium">2620.55 €</span>
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="px-4 py-3 bg-muted border-t">
+          <p className="text-sm text-muted-foreground">
+            Summe (nur aktive Fahrzeuge): <span className="font-medium">{totalFixkosten.toFixed(2)} €</span> | <span className="font-medium">{totalRuecklagen.toFixed(2)} €</span> | <span className="font-medium">{totalGesamt.toFixed(2)} €</span>
+          </p>
+        </div>
+      </div>
     </div>
   );
 };
