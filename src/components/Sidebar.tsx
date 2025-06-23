@@ -17,7 +17,7 @@ const Sidebar = () => {
 
   const menuItems = [
     { name: 'Dashboard', path: '/', icon: LayoutGrid },
-    { name: 'Mitarbeiter', path: '/mitarbeiter', icon: Users },
+    { name: 'Fahrer', path: '/fahrer', icon: Users },
     { name: 'Fahrzeuge', path: '/fahrzeuge', icon: Car },
     { name: 'Umsätze', path: '/umsaetze', icon: Euro },
     { name: 'Abrechnung', path: '/abrechnung', icon: FileText },
