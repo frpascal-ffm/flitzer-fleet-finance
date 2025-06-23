@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Mitarbeiter from "./pages/Mitarbeiter";
 import MitarbeiterDetail from "./pages/MitarbeiterDetail";
 import Fahrzeuge from "./pages/Fahrzeuge";
+import FahrzeugDetail from "./pages/FahrzeugDetail";
 import Umsaetze from "./pages/Umsaetze";
 import NotFound from "./pages/NotFound";
 
@@ -26,6 +27,7 @@ const App = () => (
             <Route path="/mitarbeiter" element={<Mitarbeiter />} />
             <Route path="/mitarbeiter/:id" element={<MitarbeiterDetail />} />
             <Route path="/fahrzeuge" element={<Fahrzeuge />} />
+            <Route path="/fahrzeuge/:id" element={<FahrzeugDetail />} />
             <Route path="/umsaetze" element={<Umsaetze />} />
             <Route path="/abrechnung" element={<div className="p-6"><h1 className="text-2xl font-bold">Abrechnung - Coming Soon</h1></div>} />
             <Route path="/kosten" element={<div className="p-6"><h1 className="text-2xl font-bold">Allgemeine Kosten - Coming Soon</h1></div>} />

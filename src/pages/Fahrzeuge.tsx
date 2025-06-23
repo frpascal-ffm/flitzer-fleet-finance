@@ -1,13 +1,17 @@
 import React from 'react';
 import { FilePlus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AddFahrzeugDialog from '@/components/AddFahrzeugDialog';
 
 const Fahrzeuge = () => {
+  const navigate = useNavigate();
+
   const fahrzeugData = [
     {
+      id: 1,
       kennzeichen: 'HG-XA 43',
       fahrzeug: 'Toyota Corolla',
       baujahr: '2024',
@@ -18,6 +22,7 @@ const Fahrzeuge = () => {
       gesamt: '885.32 €'
     },
     {
+      id: 2,
       kennzeichen: 'HG-XC 43',
       fahrzeug: 'Toyota Corolla',
       baujahr: '2024',
@@ -28,6 +33,7 @@ const Fahrzeuge = () => {
       gesamt: '885.32 €'
     },
     {
+      id: 3,
       kennzeichen: 'HG-XD 43',
       fahrzeug: 'Toyota Corolla',
       baujahr: '2024',
@@ -38,6 +44,10 @@ const Fahrzeuge = () => {
       gesamt: '849.91 €'
     }
   ];
+
+  const handleRowClick = (fahrzeugId: number) => {
+    navigate(`/fahrzeuge/${fahrzeugId}`);
+  };
 
   return (
     <div className="p-6">
@@ -109,8 +119,12 @@ const Fahrzeuge = () => {
                 </tr>
               </thead>
               <tbody>
-                {fahrzeugData.map((fahrzeug, index) => (
-                  <tr key={index} className="border-b hover:bg-gray-50">
+                {fahrzeugData.map((fahrzeug) => (
+                  <tr 
+                    key={fahrzeug.id} 
+                    className="border-b hover:bg-gray-50 cursor-pointer"
+                    onClick={() => handleRowClick(fahrzeug.id)}
+                  >
                     <td className="py-3 px-4">
                       <div className="w-3 h-3 bg-success rounded-full"></div>
                     </td>
@@ -123,7 +137,7 @@ const Fahrzeuge = () => {
                     <td className="py-3 px-4">{fahrzeug.ruecklagen}</td>
                     <td className="py-3 px-4 font-medium">{fahrzeug.gesamt}</td>
                     <td className="py-3 px-4">
-                      <div className="flex space-x-2">
+                      <div className="flex space-x-2" onClick={(e) => e.stopPropagation()}>
                         <Button variant="outline" size="sm">Bearbeiten</Button>
                         <Button variant="destructive" size="sm">Löschen</Button>
                       </div>
