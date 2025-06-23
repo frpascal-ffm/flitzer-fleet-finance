@@ -1,9 +1,11 @@
+
 import React from 'react';
 import { ArrowUp } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AddUmsatzDialog from '@/components/AddUmsatzDialog';
+import UploadUmsatzDialog from '@/components/UploadUmsatzDialog';
 
 const Umsaetze = () => {
   const umsatzData = [
@@ -48,7 +50,10 @@ const Umsaetze = () => {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Umsätze</h1>
         </div>
-        <AddUmsatzDialog />
+        <div className="flex items-center">
+          <AddUmsatzDialog />
+          <UploadUmsatzDialog />
+        </div>
       </div>
 
       {/* Filter Section */}
