@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -8,25 +7,31 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { FilePlus } from 'lucide-react';
 
 const AddUmsatzDialog = () => {
+  // Generate years array (current year and next 3 years)
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 4 }, (_, i) => currentYear + i);
+  
+  const [open, setOpen] = React.useState(false);
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-primary hover:bg-primary/90">
+        <Button className="bg-primary hover:bg-primary/90" onClick={() => setOpen(true)}>
           <FilePlus className="w-4 h-4 mr-2" />
           Umsatz hinzufügen
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[525px]">
         <DialogHeader>
           <DialogTitle>Neuen Umsatz hinzufügen</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="mitarbeiter" className="text-right">
+          <div className="space-y-2">
+            <Label htmlFor="mitarbeiter">
               Mitarbeiter
             </Label>
             <Select>
-              <SelectTrigger className="col-span-3">
+              <SelectTrigger>
                 <SelectValue placeholder="Mitarbeiter wählen" />
               </SelectTrigger>
               <SelectContent>
@@ -36,45 +41,95 @@ const AddUmsatzDialog = () => {
               </SelectContent>
             </Select>
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="nettoFahrpreis" className="text-right">
-              Netto-Fahrpreis (€)
-            </Label>
-            <Input id="nettoFahrpreis" type="number" className="col-span-3" />
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="jahr">
+                Jahr
+              </Label>
+              <Select defaultValue={currentYear.toString()}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Jahr wählen" />
+                </SelectTrigger>
+                <SelectContent>
+                  {years.map((year) => (
+                    <SelectItem key={year} value={year.toString()}>
+                      {year}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="kalenderwoche">
+                Kalenderwoche
+              </Label>
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="KW wählen" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Array.from({ length: 53 }, (_, i) => i + 1).map((week) => (
+                    <SelectItem key={week} value={week.toString()}>
+                      KW {week}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="aktionen" className="text-right">
-              Aktionen (€)
-            </Label>
-            <Input id="aktionen" type="number" className="col-span-3" />
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="nettoFahrpreis">
+                Netto-Fahrpreis (€)
+              </Label>
+              <Input id="nettoFahrpreis" type="number" placeholder="0,00" />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="aktionen">
+                Aktionen (€)
+              </Label>
+              <Input id="aktionen" type="number" placeholder="0,00" />
+            </div>
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="trinkgeld" className="text-right">
-              Trinkgeld (€)
-            </Label>
-            <Input id="trinkgeld" type="number" className="col-span-3" />
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="trinkgeld">
+                Trinkgeld (€)
+              </Label>
+              <Input id="trinkgeld" type="number" placeholder="0,00" />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="bargeld">
+                Bargeld (€)
+              </Label>
+              <Input id="bargeld" type="number" placeholder="0,00" />
+            </div>
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="bargeld" className="text-right">
-              Bargeld (€)
-            </Label>
-            <Input id="bargeld" type="number" className="col-span-3" />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="fahrten" className="text-right">
-              Fahrten
-            </Label>
-            <Input id="fahrten" type="number" className="col-span-3" />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="waschen" className="text-right">
-              Waschen (€)
-            </Label>
-            <Input id="waschen" type="number" className="col-span-3" />
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="fahrten">
+                Fahrten
+              </Label>
+              <Input id="fahrten" type="number" placeholder="0" />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="waschen">
+                Waschen (€)
+              </Label>
+              <Input id="waschen" type="number" placeholder="0,00" />
+            </div>
           </div>
         </div>
         <div className="flex justify-end space-x-2">
-          <Button variant="outline">Abbrechen</Button>
+          <Button variant="outline" onClick={() => setOpen(false)}>Abbrechen</Button>
           <Button>Speichern</Button>
         </div>
       </DialogContent>
