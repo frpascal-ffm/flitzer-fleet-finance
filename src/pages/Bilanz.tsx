@@ -263,7 +263,7 @@ const Bilanz = () => {
             <SelectValue placeholder="Monat auswählen" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Alle Monate</SelectItem>
+            <SelectItem value="all">Alle Monate</SelectItem>
             {Array.from({ length: 12 }, (_, i) => {
               const month = (i + 1).toString().padStart(2, '0');
               const monthName = new Date(2024, i).toLocaleString('de-DE', { month: 'long' });
@@ -279,13 +279,13 @@ const Bilanz = () => {
         <Select 
           value={selectedKW} 
           onValueChange={setSelectedKW}
-          disabled={!selectedMonth}
+          disabled={!selectedMonth || selectedMonth === 'all'}
         >
           <SelectTrigger>
-            <SelectValue placeholder={selectedMonth ? "Kalenderwoche auswählen" : "Erst Monat auswählen"} />
+            <SelectValue placeholder={selectedMonth && selectedMonth !== 'all' ? "Kalenderwoche auswählen" : "Erst Monat auswählen"} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Alle Kalenderwochen</SelectItem>
+            <SelectItem value="all">Alle Kalenderwochen</SelectItem>
             {availableKWs.map(kw => (
               <SelectItem key={kw} value={kw}>
                 {kw}
