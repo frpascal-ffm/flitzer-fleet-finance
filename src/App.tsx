@@ -12,6 +12,9 @@ import FahrzeugDetail from "./pages/FahrzeugDetail";
 import Umsaetze from "./pages/Umsaetze";
 import NotFound from "./pages/NotFound";
 import Abrechnung from "./pages/Abrechnung";
+import AllgemeineKosten from "./pages/AllgemeineKosten";
+import Tankkosten from "./pages/Tankkosten";
+import Bilanz from "./pages/Bilanz";
 
 const queryClient = new QueryClient();
 
@@ -30,7 +33,9 @@ const App = () => (
             <Route path="/fahrzeuge/:id" element={<FahrzeugDetail />} />
             <Route path="/umsaetze" element={<Umsaetze />} />
             <Route path="/abrechnung" element={<Abrechnung />} />
-            <Route path="/kosten" element={<div className="p-6"><h1 className="text-2xl font-bold">Allgemeine Kosten - Coming Soon</h1></div>} />
+            <Route path="/kosten" element={<AllgemeineKosten />} />
+            <Route path="/tankkosten" element={<Tankkosten />} />
+            <Route path="/bilanz" element={<Bilanz />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
