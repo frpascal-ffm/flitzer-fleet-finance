@@ -1,8 +1,8 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+// This file is now a placeholder since all the routing and provider logic
+// has been moved to main.tsx and router.tsx
+
+import { Routes, Route } from "react-router-dom";
+import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/clerk-react";
 import Layout from "./components/Layout";
 import Index from "./pages/Index";
 import Fahrer from "./pages/Fahrer";
@@ -15,33 +15,106 @@ import Abrechnung from "./pages/Abrechnung";
 import AllgemeineKosten from "./pages/AllgemeineKosten";
 import Tankkosten from "./pages/Tankkosten";
 import Bilanz from "./pages/Bilanz";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
-const queryClient = new QueryClient();
+// Protected route component
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => (
+  <>
+    <SignedIn>{children}</SignedIn>
+    <SignedOut>
+      <RedirectToSignIn />
+    </SignedOut>
+  </>
+);
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
+  <Routes>
+    {/* Public routes */}
+    <Route path="/login" element={
+      <SignedOut>
+        <Login />
+      </SignedOut>
+    } />
+    <Route path="/register" element={
+      <SignedOut>
+        <Register />
+      </SignedOut>
+    } />
+
+    {/* Protected routes */}
+    <Route path="/" element={
+      <ProtectedRoute>
         <Layout>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/fahrer" element={<Fahrer />} />
-            <Route path="/fahrer/:id" element={<FahrerDetail />} />
-            <Route path="/fahrzeuge" element={<Fahrzeuge />} />
-            <Route path="/fahrzeuge/:id" element={<FahrzeugDetail />} />
-            <Route path="/umsaetze" element={<Umsaetze />} />
-            <Route path="/abrechnung" element={<Abrechnung />} />
-            <Route path="/kosten" element={<AllgemeineKosten />} />
-            <Route path="/tankkosten" element={<Tankkosten />} />
-            <Route path="/bilanz" element={<Bilanz />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <Index />
         </Layout>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+      </ProtectedRoute>
+    } />
+    <Route path="/fahrer" element={
+      <ProtectedRoute>
+        <Layout>
+          <Fahrer />
+        </Layout>
+      </ProtectedRoute>
+    } />
+    <Route path="/fahrer/:id" element={
+      <ProtectedRoute>
+        <Layout>
+          <FahrerDetail />
+        </Layout>
+      </ProtectedRoute>
+    } />
+    <Route path="/fahrzeuge" element={
+      <ProtectedRoute>
+        <Layout>
+          <Fahrzeuge />
+        </Layout>
+      </ProtectedRoute>
+    } />
+    <Route path="/fahrzeuge/:id" element={
+      <ProtectedRoute>
+        <Layout>
+          <FahrzeugDetail />
+        </Layout>
+      </ProtectedRoute>
+    } />
+    <Route path="/umsaetze" element={
+      <ProtectedRoute>
+        <Layout>
+          <Umsaetze />
+        </Layout>
+      </ProtectedRoute>
+    } />
+    <Route path="/abrechnung" element={
+      <ProtectedRoute>
+        <Layout>
+          <Abrechnung />
+        </Layout>
+      </ProtectedRoute>
+    } />
+    <Route path="/kosten" element={
+      <ProtectedRoute>
+        <Layout>
+          <AllgemeineKosten />
+        </Layout>
+      </ProtectedRoute>
+    } />
+    <Route path="/tankkosten" element={
+      <ProtectedRoute>
+        <Layout>
+          <Tankkosten />
+        </Layout>
+      </ProtectedRoute>
+    } />
+    <Route path="/bilanz" element={
+      <ProtectedRoute>
+        <Layout>
+          <Bilanz />
+        </Layout>
+      </ProtectedRoute>
+    } />
+    <Route path="*" element={<NotFound />} />
+  </Routes>
 );
 
 export default App;
