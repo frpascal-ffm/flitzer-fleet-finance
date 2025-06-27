@@ -16,7 +16,7 @@ const Sidebar = () => {
   const location = useLocation();
 
   const menuItems = [
-    { name: 'Dashboard', path: '/', icon: LayoutGrid },
+    { name: 'Dashboard', path: '/dashboard', icon: LayoutGrid },
     { name: 'Fahrer', path: '/fahrer', icon: Users },
     { name: 'Fahrzeuge', path: '/fahrzeuge', icon: Car },
     { name: 'Umsätze', path: '/umsaetze', icon: Euro },
@@ -27,9 +27,9 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="w-64 bg-white h-screen flex flex-col">
+    <aside className="w-56 min-w-56 flex-shrink-0 h-screen overflow-y-auto bg-white border-r border-gray-100 flex flex-col">
       <div className="p-4 border-b border-gray-100">
-        <Link to="/" className="flex items-center space-x-2">
+        <Link to="/dashboard" className="flex items-center space-x-2">
           <div className="w-8 h-8 text-primary">
             <img src="/logo.svg" alt="AutoFlow" className="w-full h-full" />
           </div>
@@ -37,7 +37,7 @@ const Sidebar = () => {
         </Link>
       </div>
       
-      <nav className="flex-1 p-2">
+      <nav className="flex-1 overflow-y-auto py-2">
         <ul className="space-y-1">
           {menuItems.map((item) => {
             const isActive = location.pathname === item.path;
@@ -47,10 +47,10 @@ const Sidebar = () => {
               <li key={item.name}>
                 <Link
                   to={item.path}
-                  className={`flex items-center space-x-3 px-4 py-2.5 rounded-lg transition-colors ${
+                  className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
                     isActive
-                      ? 'bg-gray-100 text-gray-900 font-medium'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      ? 'text-blue-600 font-medium'
+                      : 'text-gray-600 hover:text-blue-600'
                   }`}
                 >
                   <Icon className="w-5 h-5" />
@@ -65,13 +65,13 @@ const Sidebar = () => {
       <div className="p-2 mt-auto">
         <Link
           to="/logout"
-          className="flex items-center space-x-3 px-4 py-2.5 rounded-lg transition-colors text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+          className="flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors text-gray-600 hover:text-blue-600"
         >
           <LogOut className="w-5 h-5" />
           <span className="text-sm">Abmelden</span>
         </Link>
       </div>
-    </div>
+    </aside>
   );
 };
 

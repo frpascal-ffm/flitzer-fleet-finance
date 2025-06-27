@@ -8,16 +8,18 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex min-h-screen h-screen w-full overflow-hidden bg-white">
       <Sidebar />
-      <main className="flex-1 overflow-auto">
-        <header className="bg-white shadow-sm p-4 flex justify-end items-center">
+      <div className="flex-1 flex flex-col overflow-hidden max-w-full">
+        <header className="bg-white shadow-sm px-4 py-2 flex justify-end items-center">
           <SignedIn>
             <UserButton afterSignOutUrl="/login" />
           </SignedIn>
         </header>
-        {children}
-      </main>
+        <div className="flex-1 overflow-auto w-full max-w-full">
+          {children}
+        </div>
+      </div>
     </div>
   );
 };

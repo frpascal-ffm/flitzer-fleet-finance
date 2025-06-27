@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { SignIn } from "@clerk/clerk-react";
 
-export default function Login() {
+export default function ResetPassword() {
   const navigate = useNavigate();
   
   return (
@@ -9,10 +9,10 @@ export default function Login() {
       <div className="w-full max-w-md">
         <SignIn
           routing="path"
-          path="/login"
+          path="/reset-password"
           signUpUrl="/register"
           redirectUrl="/dashboard"
-          afterSignInUrl="/dashboard"
+          initialStep="forgot_password"
           appearance={{
             elements: {
               card: "shadow-none border-none",

@@ -1,22 +1,23 @@
 import { useNavigate } from "react-router-dom";
-import { SignIn } from "@clerk/clerk-react";
+import { SignUp } from "@clerk/clerk-react";
 
-export default function Login() {
+export default function VerifyEmail() {
   const navigate = useNavigate();
   
   return (
     <div className="flex items-center justify-center min-h-screen bg-white p-4">
       <div className="w-full max-w-md">
-        <SignIn
+        <SignUp 
           routing="path"
-          path="/login"
-          signUpUrl="/register"
+          path="/verify-email"
+          signInUrl="/login"
           redirectUrl="/dashboard"
-          afterSignInUrl="/dashboard"
           appearance={{
             elements: {
+              rootBox: "mx-auto w-full",
               card: "shadow-none border-none",
-              rootBox: "mx-auto w-full"
+              header: "text-center",
+              footer: "text-center",
             }
           }}
         />

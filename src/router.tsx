@@ -1,5 +1,5 @@
-import { createBrowserRouter } from "react-router-dom";
-import { SignedIn, SignedOut, ClerkLoading } from "@clerk/react-router";
+import { createBrowserRouter, Navigate, Outlet } from "react-router-dom";
+import { SignedIn, SignedOut, RedirectToSignIn, ClerkLoaded, ClerkLoading } from "@clerk/clerk-react";
 import Layout from "./components/Layout";
 import Index from "./pages/Index";
 import Fahrer from "./pages/Fahrer";
@@ -14,6 +14,9 @@ import Tankkosten from "./pages/Tankkosten";
 import Bilanz from "./pages/Bilanz";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import VerifyEmail from "./pages/VerifyEmail";
+import ResetPassword from "./pages/ResetPassword";
+import SSOCallback from "./pages/SSOCallback";
 
 // Create a loading component
 const LoadingPage = () => (
@@ -25,134 +28,148 @@ const LoadingPage = () => (
   </div>
 );
 
+// Create a layout for protected routes
+const ProtectedLayout = () => {
+  return (
+    <SignedIn>
+      <Layout>
+        <Outlet />
+      </Layout>
+    </SignedIn>
+  );
+};
+
+// Create a layout for public routes
+const PublicLayout = () => {
+  return (
+    <SignedOut>
+      <Outlet />
+    </SignedOut>
+  );
+};
+
+// Redirect to sign in if not authenticated
+const RequireAuth = () => {
+  return (
+    <>
+      <SignedIn>
+        <Outlet />
+      </SignedIn>
+      <SignedOut>
+        <RedirectToSignIn />
+      </SignedOut>
+    </>
+  );
+};
+
 export const router = createBrowserRouter([
-  // Loader for all routes
-  {
-    id: "root",
-    element: (
-      <ClerkLoading fallback={<LoadingPage />}>
-        <div />
-      </ClerkLoading>
-    ),
-    loader: () => null,
-  },
-  // Public routes
-  {
-    path: "/login",
-    element: (
-      <SignedOut>
-        <Login />
-      </SignedOut>
-    ),
-  },
-  {
-    path: "/register",
-    element: (
-      <SignedOut>
-        <Register />
-      </SignedOut>
-    ),
-  },
-  // Protected routes
+  // Root path - redirects to dashboard if signed in, otherwise to login
   {
     path: "/",
     element: (
-      <SignedIn>
-        <Layout>
-          <Index />
-        </Layout>
-      </SignedIn>
+      <>
+        <SignedIn>
+          <Navigate to="/dashboard" replace />
+        </SignedIn>
+        <SignedOut>
+          <Navigate to="/login" replace />
+        </SignedOut>
+      </>
     ),
+    errorElement: <NotFound />,
   },
+  // Public routes - only accessible when signed out
   {
-    path: "/fahrer",
-    element: (
-      <SignedIn>
-        <Layout>
-          <Fahrer />
-        </Layout>
-      </SignedIn>
-    ),
+    element: <PublicLayout />,
+    children: [
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/login/*",
+        element: <Login />,
+      },
+      {
+        path: "/register",
+        element: <Register />,
+      },
+      {
+        path: "/register/*",
+        element: <Register />,
+      },
+      {
+        path: "/verify-email",
+        element: <VerifyEmail />,
+      },
+      {
+        path: "/verify-email/*",
+        element: <VerifyEmail />,
+      },
+      {
+        path: "/sso-callback",
+        element: <SSOCallback />,
+      },
+      {
+        path: "/reset-password",
+        element: <ResetPassword />,
+      },
+      {
+        path: "/reset-password/*",
+        element: <ResetPassword />,
+      },
+    ],
   },
+  // Protected routes - require authentication
   {
-    path: "/fahrer/:id",
-    element: (
-      <SignedIn>
-        <Layout>
-          <FahrerDetail />
-        </Layout>
-      </SignedIn>
-    ),
-  },
-  {
-    path: "/fahrzeuge",
-    element: (
-      <SignedIn>
-        <Layout>
-          <Fahrzeuge />
-        </Layout>
-      </SignedIn>
-    ),
-  },
-  {
-    path: "/fahrzeuge/:id",
-    element: (
-      <SignedIn>
-        <Layout>
-          <FahrzeugDetail />
-        </Layout>
-      </SignedIn>
-    ),
-  },
-  {
-    path: "/umsaetze",
-    element: (
-      <SignedIn>
-        <Layout>
-          <Umsaetze />
-        </Layout>
-      </SignedIn>
-    ),
-  },
-  {
-    path: "/abrechnung",
-    element: (
-      <SignedIn>
-        <Layout>
-          <Abrechnung />
-        </Layout>
-      </SignedIn>
-    ),
-  },
-  {
-    path: "/kosten",
-    element: (
-      <SignedIn>
-        <Layout>
-          <AllgemeineKosten />
-        </Layout>
-      </SignedIn>
-    ),
-  },
-  {
-    path: "/tankkosten",
-    element: (
-      <SignedIn>
-        <Layout>
-          <Tankkosten />
-        </Layout>
-      </SignedIn>
-    ),
-  },
-  {
-    path: "/bilanz",
-    element: (
-      <SignedIn>
-        <Layout>
-          <Bilanz />
-        </Layout>
-      </SignedIn>
-    ),
+    element: <RequireAuth />,
+    children: [
+      {
+        element: <ProtectedLayout />,
+        children: [
+          {
+            path: "/dashboard",
+            element: <Index />,
+          },
+          {
+            path: "/fahrer",
+            element: <Fahrer />,
+          },
+          {
+            path: "/fahrer/:id",
+            element: <FahrerDetail />,
+          },
+          {
+            path: "/fahrzeuge",
+            element: <Fahrzeuge />,
+          },
+          {
+            path: "/fahrzeuge/:id",
+            element: <FahrzeugDetail />,
+          },
+          {
+            path: "/umsaetze",
+            element: <Umsaetze />,
+          },
+          {
+            path: "/abrechnung",
+            element: <Abrechnung />,
+          },
+          {
+            path: "/kosten",
+            element: <AllgemeineKosten />,
+          },
+          {
+            path: "/tankkosten",
+            element: <Tankkosten />,
+          },
+          {
+            path: "/bilanz",
+            element: <Bilanz />,
+          },
+        ],
+      },
+    ],
   },
   {
     path: "*",
